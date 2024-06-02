@@ -1,0 +1,23 @@
+
+syntax = "proto3";
+package imagetransfer;
+
+
+service ImageTransfer {
+  rpc ShowImgOnServer(Empty) returns (Empty) {}
+  rpc SetPosition(Position) returns (Empty) {}
+  rpc SetPixels(PatchPixels) returns (Empty) {}
+}
+
+
+message Empty {}
+
+message Position {
+  int32 x_pos = 1;
+  int32 y_pos = 2;
+}
+
+message PatchPixels {
+  bytes pixels = 1;
+}
+
