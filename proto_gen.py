@@ -9,7 +9,8 @@ def proto_gen(in_dir, out_dir):
         if file.endswith(".proto"):
             proto_file = os.path.join(in_dir, file)
             protofiles.append(proto_file)
-            
+    
+    os.makedirs(out_dir, exist_ok=True)
     for proto_file in protofiles:
         protoc.main((
             "",
@@ -22,7 +23,7 @@ def proto_gen(in_dir, out_dir):
 
 
 IN_DIR="./proto"
-OUT_DIR="."
+OUT_DIR="./src/proto"
 
 def main():
     proto_gen(IN_DIR, OUT_DIR)

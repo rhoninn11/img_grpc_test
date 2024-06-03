@@ -1,5 +1,5 @@
-import img_patch_pb2_grpc as pb2_grpc
-import img_patch_pb2 as bp2
+import proto.img_patch_pb2_grpc as pb2_grpc
+import proto.img_patch_pb2 as bp2
 
 import grpc
 from img_patch import ImgPatchService
