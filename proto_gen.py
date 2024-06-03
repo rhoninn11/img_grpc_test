@@ -1,12 +1,30 @@
 from grpc_tools import protoc
+import os
 
-protoc.main(
-    (
-        "",
-        "-I./protos",
-        "--python_out=.",
-        "--pyi_out=.",
-        "--grpc_python_out=.",
-        "./protos/route_guide.proto",
-    )
-)
+# add to os path
+def proto_gen(in_dir, out_dir):
+    ls = os.listdir(in_dir)
+    protofiles = []
+    for file in ls:
+        if file.endswith(".proto"):
+            proto_file = os.path.join(in_dir, file)
+            protofiles.append(proto_file)
+            
+    for proto_file in protofiles:
+        protoc.main((
+            "",
+            f"-I{in_dir}",
+            f"--python_out={out_dir}",
+            f"--pyi_out={out_dir}",
+            f"--grpc_python_out={out_dir}",
+            proto_file,
+        ))
+
+
+IN_DIR="./proto"
+OUT_DIR="."
+
+def main():
+    proto_gen(IN_DIR, OUT_DIR)
+
+main()

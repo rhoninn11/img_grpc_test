@@ -1,11 +1,12 @@
 
 syntax = "proto3";
-package imagetransfer;
+package imgpatch;
 
 
-service ImageTransfer {
+service ImgPatch {
   rpc ShowImgOnServer(Empty) returns (Empty) {}
   rpc SetPosition(Position) returns (Empty) {}
+  rpc GetPixels(Empty) returns (PatchPixels) {}
   rpc SetPixels(PatchPixels) returns (Empty) {}
 }
 
