@@ -4,12 +4,17 @@ package imgpatch;
 
 
 service ImgPatch {
-  rpc ShowImgOnServer(Empty) returns (Empty) {}
   rpc SetPosition(Position) returns (Empty) {}
-  rpc GetPixels(Empty) returns (PatchPixels) {}
-  rpc SetPixels(PatchPixels) returns (Empty) {}
+  rpc GetPixels(ImgInfo) returns (Image) {}
+  rpc SetPixels(Image) returns (ImgInfo) {}
+  rpc SaveImage(Empty) returns (Empty) {}
 }
 
+enum ImgType {
+  NONE = 0;
+  MONO = 1;
+  RGB = 2;
+}
 
 message Empty {}
 
@@ -20,5 +25,16 @@ message Position {
 
 message PatchPixels {
   bytes pixels = 1;
+}
+
+message ImgInfo {
+  int32 width = 1;
+  int32 height = 2;
+  ImgType img_type = 3;
+}
+
+message Image {
+  ImgInfo info = 1;
+  bytes pixels = 2;
 }
 

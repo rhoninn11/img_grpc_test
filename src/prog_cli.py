@@ -28,18 +28,48 @@ import numpy as np
 def start_client():
     channel = grpc.insecure_channel("localhost:50051")
     stub = pb2_grpc.ImgPatchStub(channel)
+    patches: list[bp2.Image] = []
     print("+++ Client started")
-    for i in range(3):
-        rand_x = random.randint(0, 512)
-        rand_y = random.randint(0, 512)
-        print(f"+++ random x: {rand_x} y: {rand_y}")
-        position = bp2.Position(x_pos=rand_x, y_pos=rand_y)
+
+    for i in range(15):
+        rand_pos_x = random.randint(0, 512)
+        rand_pos_y = random.randint(0, 512)
+        print(f"+++ random x: {rand_pos_x} y: {rand_pos_y}")
+        position = bp2.Position(x_pos=rand_pos_x, y_pos=rand_pos_y)
+
+        rand_size_x = random.randint(0, 300)
+        rand_size_y = random.randint(0, 300)
+        info = bp2.ImgInfo(width=rand_size_x, height=rand_size_y, img_type=bp2.ImgType.RGB)
 
         _ = stub.SetPosition(position)
-        pixels = stub.GetPixels(bp2.Empty())
-        img_patch = np.frombuffer(pixels.pixels, dtype=np.uint8).reshape(PATCH_SIZE, PATCH_SIZE, 3)
-        io.imshow(img_patch)
-        plt.show()
+
+        img: bp2.Image = stub.GetPixels(info)
+        print(f"+++ image received | width: {img.info.width} height: {img.info.height}")
+        print(f"+++ image received | first couple of pixels: {img.pixels[:10]}")
+
+
+        patches.append(img)
+    print("+++ patches sampled")
+    
+    for i in range(40):
+        rand_pos_x = random.randint(0, 800)
+        rand_pos_y = random.randint(0, 800)
+
+        pos = bp2.Position(x_pos=rand_pos_x, y_pos=rand_pos_y)
+        _ = stub.SetPosition(pos)
+
+        rand_idx = random.randint(0, len(patches)-1)
+        img = patches[rand_idx]
+        print(f"+++ image sending | width: {img.info.width} height: {img.info.height}")
+        print(f"+++ image sending | first couple of pixels: {img.pixels[:10]}")
+        _ = stub.SetPixels(img)
+    print("+++ patches shuffled")
+
+    # np.
+
+    _ = stub.SaveImage(bp2.Empty())
+    print("+++ image saved | client done")
+
 
 import argparse
 from async_server import start_server_asyn
